@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
 
 function HomePage() {
-    const navigation = useNavigate()
+  const navigation = useNavigate();
 
-    function navegar() {
-        navigation("/sobre")
-    }
+  function navegar() {
+    navigation("/home");
+  }
 
-    return <h1>Seja bem vindo a página Home</h1>
+  return <h1>Seja bem vindo a página Home</h1>;
 }
 
 export default HomePage;

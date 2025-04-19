@@ -1,34 +1,34 @@
 .container {
-    background-color: rgb(8, 8, 8);
-    display: flex;
-    justify-content: space-around;
-    height: 14vh;
+  background-color: #08356a;
+  display: flex;
+  justify-content: space-around;
+  height: 14vh;
 }
 
 .container-logo {
-    align-self: center;
-    color: rgb(255, 255, 255);
+  align-self: center;
+  color: rgb(255, 255, 255);
 }
 
 .container-nav {
-    display: flex;
-    gap: 20px;
+  display: flex;
+  gap: 20px;
 }
 
 ul {
-    list-style: none;
+  list-style: none;
 }
 
 a {
-    color: rgb(255, 255, 255);
-    text-decoration: none;
-    font-family: Arial;
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  font-family: Arial;
 }
 
 nav {
-    align-self: center;
+  align-self: center;
 }
 
 .selected {
-    color: rgb(83, 58, 58);  
+  color: rgb(83, 58, 58);
 }
