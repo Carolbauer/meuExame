@@ -1,5 +1,6 @@
 import { FaInfoCircle } from "react-icons/fa";
 import "./Card.css"
+import React from "react";
 function getPriorityClass(priority) {
     switch (priority) {
       case "Urgente":

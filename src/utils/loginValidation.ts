@@ -1,5 +1,5 @@
-export function validateLogin({ cpf, codigo }) {
-    const errors = { cpf: "", codigo: "", auth: "" };
+export function validateLogin({ cpf, code }) {
+    const errors = { cpf: "", code: "", auth: "" };
     let valid = true;
   
     if (!cpf.trim()) {
@@ -7,8 +7,8 @@ export function validateLogin({ cpf, codigo }) {
       valid = false;
     }
   
-    if (!codigo.trim()) {
-      errors.codigo = "O campo Código é obrigatório.";
+    if (!code.trim()) {
+      errors.code = "O campo Código é obrigatório.";
       valid = false;
     }
   
