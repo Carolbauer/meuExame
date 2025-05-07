@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Card from "../../components/Card/Card";
 import "./HomePage.css"
 import { FaExclamationTriangle } from "react-icons/fa";
+import React from "react";
 
 function HomePage() {
   const navigation = useNavigate();
@@ -22,7 +23,11 @@ function HomePage() {
           priority={"Não Urgente"}
           avgWaitTime={"60 dias"}
           timeInQueue={"01 dias"}
-          position={"7"} />
+          position={"7"} 
+          date={undefined} 
+          time={undefined} 
+          location={undefined} 
+          address={undefined} />
       </div>
 
       <div>
@@ -32,7 +37,11 @@ function HomePage() {
           priority={"Urgente"}
           avgWaitTime={"30 dias"}
           timeInQueue={"10 dias"}
-          position={"2°"} />
+          position={"2°"} 
+          date={undefined} 
+          time={undefined} 
+          location={undefined} 
+          address={undefined} />
       </div>
       <div className="alerts">
         <div className="alert">

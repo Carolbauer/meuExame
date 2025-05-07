@@ -1,6 +1,9 @@
 import { NavLink, useLocation } from "react-router-dom";
 import exameSus from "../../assets/image/exame-sus.png";
+
 import "./Header.css";
+import React from "react";
+import { handleSignOut } from "../../utils/handleSignOut";
 
 function Header() {
   const location = useLocation();
@@ -47,7 +50,8 @@ function Header() {
           {!isLoginPage && (
             <li>
               <NavLink
-                to={"/datacep"}
+                to="/login"
+                onClick={() => handleSignOut()}
                 className={({ isActive }) => (isActive ? "selected" : "")}
               >
                 Sair

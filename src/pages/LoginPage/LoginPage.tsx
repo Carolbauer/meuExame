@@ -1,31 +1,49 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { validateLogin } from "../../validations/loginValidation";
+import { validateLogin } from "../../utils/loginValidation";
+import { supabase } from "../../utils/supabaseClient";
+import govbr from "../../assets/image/govbr.webp";
 import "./LoginPage.css";
 
-function LoginPage() {
+const LoginPage: React.FC = () => {
   const navigation = useNavigate();
 
   const [cpf, setCpf] = useState("");
-  const [codigo, setCodigo] = useState("");
-  const [errors, setErrors] = useState({ cpf: "", codigo: "", auth: "" });
+  const [code, setCodigo] = useState("");
+  const [errors, setErrors] = useState({ cpf: "", code: "", auth: "" });
 
-  const handleLogin = () => {
-    const { valid, errors: validationErrors } = validateLogin({ cpf, codigo });
+  const handleLogin = async () => {
+    const { valid, errors: validationErrors } = validateLogin({ cpf, code });
 
     if (!valid) {
       setErrors(validationErrors);
       return;
     }
 
-    if (cpf === "12345678900" && codigo === "abc123") {
-      navigation("/home");
-    } else {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: cpf,
+      password: code,
+    });
+
+    if (error) {
       setErrors({
         ...validationErrors,
         auth: "CPF ou código de acesso incorretos. Verifique e tente novamente.",
       });
+      return;
     }
+    
+    navigation("/home");
+  };
+
+  const handleLoginGov = async () => {
+    
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: "admin@examesus.com",
+      password: "1q2w3e4r5t",
+    });
+
+    navigation("/home");
   };
 
   return (
@@ -46,13 +64,13 @@ function LoginPage() {
 
             <label htmlFor="codigo">CÓDIGO DE ACESSO</label>
             <input
-              type="text"
+              type="password"
               id="codigo"
               placeholder="Digite seu código de acesso"
-              value={codigo}
+              value={code}
               onChange={(e) => setCodigo(e.target.value)}
             />
-            {errors.codigo && <p className="error-msg">{errors.codigo}</p>}
+            {errors.code && <p className="error-msg">{errors.code}</p>}
 
             {errors.auth && <p className="error-msg">{errors.auth}</p>}
 
@@ -63,8 +81,8 @@ function LoginPage() {
             >
               Continuar
             </button>
-            <button type="button" className="btn-secondary">
-              Continuar com a conta gov.br
+            <button type="button" className="btn-secondary" onClick={handleLoginGov}>
+              Continuar com a conta <img src={govbr} alt="logo gov" className="image-gov" />
             </button>
           </form>
         </main>
@@ -78,12 +96,10 @@ function LoginPage() {
       <div className="info-box">
         <strong>Atenção!</strong>
         <br />
-        A <strong>posição na fila</strong> e a <strong>previsão</strong> de
-        atendimento são estimativas e poderão mudar de acordo com a gravidade do
-        paciente (Sabe como funciona a FILA?) ou por decisão judicial
+        A <strong>posição na fila</strong> e a <strong>previsão</strong> de atendimento são estimativas e poderão mudar de acordo com a gravidade do paciente (Sabe como funciona a FILA?) ou por decisão judicial
       </div>
     </div>
   );
-}
+};
 
 export default LoginPage;
