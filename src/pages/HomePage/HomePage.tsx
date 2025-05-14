@@ -1,48 +1,105 @@
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../../utils/supabaseClient";
 import Card from "../../components/Card/Card";
 import "./HomePage.css"
 import { FaExclamationTriangle } from "react-icons/fa";
-import React from "react";
 
 function HomePage() {
   const navigation = useNavigate();
+  const [user, setUser] = useState<any>(null);
+  const [exams, setExams] = useState<any[]>([]);
 
-  function navegar() {
-    navigation("/home");
-  }
+  useEffect(() => {
+    async function fetchUserAndExams() {
+      const { data: sessionData } = await supabase.auth.getUser();
+      const email = sessionData.user.email;
+
+      const { data: userData } = await supabase
+        .from("users")
+        .select("*")
+        .eq("email", email)
+        .single();
+
+      setUser(userData);
+
+      const { data: queueData } = await supabase
+        .from("schedulingqueue")
+        .select(`
+          id,
+          created_at,
+          exam_id,
+          exams(name),
+          prioritylevels(id, description, color)
+        `)
+        .eq("user_id", userData.id);
+
+      const enrichedExams = await Promise.all(
+        queueData.map(async (item) => {
+          const daysInQueue = Math.floor(
+            (Date.now() - new Date(item.created_at).getTime()) / (1000 * 60 * 60 * 24)
+          );
+
+          const { data: allInQueue } = await supabase
+            .from("schedulingqueue")
+            .select(`
+              id,
+              created_at,
+              prioritylevels(id)
+            `)
+            .eq("exam_id", item.exam_id);
+
+          allInQueue.sort((a, b) => {
+            const prioA = a.prioritylevels?.id ?? 99;
+            const prioB = b.prioritylevels?.id ?? 99;
+            if (prioA !== prioB) return prioA - prioB;
+            return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          });
+
+          const position = allInQueue.findIndex((q) => q.id === item.id) + 1;
+
+          return {
+            name: item.exams.name,
+            priority: item.prioritylevels.description,
+            color: item.prioritylevels.color,
+            avgWaitTime: "60 dias",
+            timeInQueue: `${daysInQueue} dias`,
+            position,
+          };
+        })
+      );
+
+      setExams(enrichedExams);
+    }
+
+    fetchUserAndExams();
+  }, [navigation]);
 
   return (
     <div className="container-page">
       <h2 className="title">Informações do Exame</h2>
-      <p className="text-page">Ola "Nome do Paciente", seu número de CPF é "0000000000"</p>
 
-      <div>
-        <Card
-          examName={"Radiografia"}
-          status={"Na fila de espera"}
-          priority={"Não Urgente"}
-          avgWaitTime={"60 dias"}
-          timeInQueue={"01 dias"}
-          position={"7"} 
-          date={undefined} 
-          time={undefined} 
-          location={undefined} 
-          address={undefined} />
-      </div>
+      {user ? (
+        <p className="text-page">
+          Olá <strong>{user.name || user.email}</strong>, seu número de CPF é{" "}
+          <strong>{user.cpf}</strong>
+        </p>
+      ) : (
+        <p className="text-page">Carregando informações do paciente...</p>
+      )}
 
-      <div>
+      {exams.map((exam, idx) => (
         <Card
-          examName={"Ecografia Abdominal Total"}
+          key={idx}
+          examName={exam.name}
           status={"Na fila de espera"}
-          priority={"Urgente"}
-          avgWaitTime={"30 dias"}
-          timeInQueue={"10 dias"}
-          position={"2°"} 
-          date={undefined} 
-          time={undefined} 
-          location={undefined} 
-          address={undefined} />
-      </div>
+          priority={exam.priority}
+          avgWaitTime={exam.avgWaitTime}
+          timeInQueue={exam.timeInQueue}
+          position={`${exam.position}º`}
+        />
+      ))}
+
       <div className="alerts">
         <div className="alert">
           <div className="alert-content">
@@ -56,7 +113,7 @@ function HomePage() {
             <FaExclamationTriangle className="alert-icon" />
             <span>A posição na fila e a previsão de atendimento são estimativas e poderão mudar de acordo com a gravidade do paciente(Metodologia Prioridades) ou por decisão judicial</span>
           </div>
-          
+
         </div>
       </div>
     </div>
