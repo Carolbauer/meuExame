@@ -78,7 +78,20 @@
   color: #333;
   border: 1px solid #ccc;
   border-radius: 6px;
-  cursor: pointer;
+  cursor: not-allowed;
+  position: relative;
+  opacity: 0.8;
+}
+
+.btn-secondary:hover::after {
+  content: "Em breve...";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: #555;
+  margin-top: 4px;
 }
 
 .alert-side {
