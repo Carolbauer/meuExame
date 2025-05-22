@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import exameSus from "../../assets/image/exame-sus.png";
+import exameSus from "../../assets/image/logo_meu_exame.png";
 
 import "./Header.css";
 import React from "react";
@@ -13,7 +13,7 @@ function Header() {
   return (
     <header className="container">
       <div className="container-logo">
-        <img src={exameSus} alt="Logo SUS" width={270} height={60} />
+        <img src={exameSus} alt="Logo SUS" className="logo" />
       </div>
 
       <nav>
@@ -21,10 +21,10 @@ function Header() {
           {!isLoginPage && (
             <li>
               <NavLink
-                to={"/login"}
+                to={"/home"}
                 className={({ isActive }) => (isActive ? "selected" : "")}
               >
-                Home
+                Meus Exames
               </NavLink>
             </li>
           )}

@@ -1,13 +1,19 @@
 .container {
   background-color: #08356a;
   display: flex;
-  justify-content: space-around;
-  height: 14vh;
+  justify-content: space-between;
+  align-items: center;
+  height: 10vh;
+  padding: 0 2.3rem;
+}
+.logo {
+  height: 70px;
+  width: auto;
 }
 
 .container-logo {
   align-self: center;
-  color: rgb(255, 255, 255);
+  line-height: 0;
 }
 
 .container-nav {
@@ -23,12 +29,35 @@ a {
   color: rgb(255, 255, 255);
   text-decoration: none;
   font-family: Arial;
+  position: relative;
+  padding-bottom: 4px;
+  transition: color 0.3s;
+}
+
+a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  left: 0;
+  bottom: 0;
+  background-color: white;
+  transition: width 0.3s;
+}
+
+a:hover::after {
+  width: 100%;
+}
+
+.selected {
+  font-weight: bold;
+  color: #fff;
+}
+
+.selected::after {
+  width: 100%;
 }
 
 nav {
   align-self: center;
-}
-
-.selected {
-  color: rgb(83, 58, 58);
 }
