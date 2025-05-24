@@ -29,6 +29,7 @@ interface CardProps {
   location?: string;
   address?: string;
   isScheduled: boolean;
+  instructions?: string;
 }
 
 function Card({
@@ -43,7 +44,8 @@ function Card({
   time,
   location,
   address,
-  isScheduled
+  isScheduled,
+  instructions
 }: CardProps) {
   const navigate = useNavigate();
 
@@ -107,6 +109,12 @@ function Card({
           <div className="info-line">
             <strong>ENDEREÇO:</strong>
             <span className="value">{address}</span>
+          </div>
+        )}
+        {instructions && (
+          <div className="info-line">
+            <strong>INSTRUÇÕES:</strong>
+            <span className="value">{instructions}</span>
           </div>
         )}
 
