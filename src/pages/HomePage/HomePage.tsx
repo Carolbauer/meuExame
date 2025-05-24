@@ -40,7 +40,7 @@ function HomePage() {
         queueData.map(async (item) => {
           const daysInQueue = Math.floor(
             (Date.now() - new Date(item.created_at).getTime()) /
-              (1000 * 60 * 60 * 24)
+            (1000 * 60 * 60 * 24)
           );
 
           const { data: allInQueue } = await supabase
@@ -84,7 +84,9 @@ function HomePage() {
             timeInQueue: `${daysInQueue} dias`,
             position,
             isScheduled,
+            status: isScheduled ? "Aguardando confirmação" : "Na fila de espera"
           };
+
         })
       );
 
@@ -112,7 +114,7 @@ function HomePage() {
           key={idx}
           examId={exam.exam_id}
           examName={exam.name}
-          status={"Na fila de espera"}
+          status={exam.status}
           priority={exam.priority}
           avgWaitTime={exam.avgWaitTime}
           timeInQueue={exam.timeInQueue}
