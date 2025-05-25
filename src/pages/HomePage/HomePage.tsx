@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { supabase } from "../../utils/supabaseClient";
 import Card from "../../components/Card/Card";
 import "./HomePage.css";
@@ -74,7 +74,6 @@ function HomePage() {
 
           const isScheduled = Boolean(appointment?.appointment_time);
 
-
           return {
             exam_id: item.exam_id,
             name: item.exams.name,
@@ -135,8 +134,11 @@ function HomePage() {
             <FaExclamationTriangle className="alert-icon" />
             <span>
               A posição na fila e a previsão de atendimento são estimativas e
-              poderão mudar de acordo com a gravidade do paciente(Metodologia
-              Prioridades) ou por decisão judicial
+              poderão mudar de acordo com a gravidade do paciente(
+              <NavLink to={"/comofuncionaafila"} style={{ color: "#007bff", textDecoration: "underline", fontWeight: "bold" }}>
+                Sabe como funciona a FILA?
+              </NavLink>
+              ) ou por decisão judicial
             </span>
           </div>
         </div>

@@ -1,6 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
 import exameSus from "../../assets/image/logo_meu_exame.png";
-
 import "./Header.css";
 import React from "react";
 import { handleSignOut } from "../../utils/handleSignOut";
@@ -31,7 +30,7 @@ function Header() {
 
           <li>
             <NavLink
-              to={"/produto/home"}
+              to={"/comofuncionaafila"}
               className={({ isActive }) => (isActive ? "selected" : "")}
             >
               Sabe como funciona a FILA?
