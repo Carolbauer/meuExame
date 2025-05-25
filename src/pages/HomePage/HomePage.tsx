@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { supabase } from "../../utils/supabaseClient";
 import Card from "../../components/Card/Card";
 import "./HomePage.css";
@@ -74,7 +74,6 @@ function HomePage() {
 
           const isScheduled = Boolean(appointment?.appointment_time);
 
-
           return {
             exam_id: item.exam_id,
             name: item.exams.name,
@@ -98,7 +97,7 @@ function HomePage() {
 
   return (
     <div className="container-page">
-      <h2 className="title">Informações do Exame</h2>
+      <h2 className="title">Bem-vindo à plataforma Meu Exame!</h2>
 
       {user ? (
         <p className="text-page">
@@ -109,6 +108,31 @@ function HomePage() {
         <p className="text-page">Carregando informações do paciente...</p>
       )}
 
+      {exams.length === 0 ? (
+        <div className="no-exams">
+          <p className="no-exams-text">
+            Tudo certo por aqui! Nenhum exame foi solicitado para você até
+            agora. Assim que um exame for agendado, ele aparecerá nesta tela.
+          </p>
+          <NavLink to="/produtos" className="no-exams-btn">
+            Solicitar Exame
+          </NavLink>
+        </div>
+      ) : (
+        exams.map((exam, idx) => (
+          <Card
+            key={idx}
+            examId={exam.exam_id}
+            examName={exam.name}
+            status={"Na fila de espera"}
+            priority={exam.priority}
+            avgWaitTime={exam.avgWaitTime}
+            timeInQueue={exam.timeInQueue}
+            position={`${exam.position}º`}
+            isScheduled={exam.isScheduled}
+          />
+        ))
+      )}
       {exams.map((exam, idx) => (
         <Card
           key={idx}
@@ -137,8 +161,18 @@ function HomePage() {
             <FaExclamationTriangle className="alert-icon" />
             <span>
               A posição na fila e a previsão de atendimento são estimativas e
-              poderão mudar de acordo com a gravidade do paciente(Metodologia
-              Prioridades) ou por decisão judicial
+              poderão mudar de acordo com a gravidade do paciente(
+              <NavLink
+                to={"/comofuncionaafila"}
+                style={{
+                  color: "#007bff",
+                  textDecoration: "underline",
+                  fontWeight: "bold",
+                }}
+              >
+                Sabe como funciona a FILA?
+              </NavLink>
+              ) ou por decisão judicial
             </span>
           </div>
         </div>
