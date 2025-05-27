@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { validateLogin } from "../../utils/loginValidation";
-import { supabase } from "../../utils/supabaseClient";
 import govbr from "../../assets/image/govbr.webp";
 import "./LoginPage.css";
 
@@ -9,41 +8,49 @@ const LoginPage: React.FC = () => {
   const navigation = useNavigate();
 
   const [cpf, setCpf] = useState("");
-  const [code, setCodigo] = useState("");
+  const [password, setCodigo] = useState("");
   const [errors, setErrors] = useState({ cpf: "", code: "", auth: "" });
 
   const handleLogin = async () => {
-    const { valid, errors: validationErrors } = validateLogin({ cpf, code });
+    const { valid, errors: validationErrors } = validateLogin(cpf, password);
 
     if (!valid) {
       setErrors(validationErrors);
       return;
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: cpf,
-      password: code,
-    });
+    try {
+      const response = await fetch("http://localhost:3001/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cpf,
+          password,
+        }),
+      });
 
-    if (error) {
+      if (!response.ok) {
+        throw new Error("CPF ou código de acesso incorretos.");
+      }
+
+      const data = await response.json();
+
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userData", data.userData.email);
+      } else {
+        throw new Error("Token não encontrado na resposta.");
+      }
+
+      navigation("/home");
+    } catch (error: any) {
       setErrors({
         ...validationErrors,
-        auth: "CPF ou código de acesso incorretos. Verifique e tente novamente.",
+        auth: error.message || "Erro ao fazer login. Tente novamente.",
       });
-      return;
     }
-    
-    navigation("/home");
-  };
-
-  const handleLoginGov = async () => {
-    
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: "admin@examesus.com",
-      password: "1q2w3e4r5t",
-    });
-
-    navigation("/home");
   };
 
   return (
@@ -67,7 +74,7 @@ const LoginPage: React.FC = () => {
               type="password"
               id="codigo"
               placeholder="Digite seu código de acesso"
-              value={code}
+              value={password}
               onChange={(e) => setCodigo(e.target.value)}
             />
             {errors.code && <p className="error-msg">{errors.code}</p>}
@@ -81,7 +88,7 @@ const LoginPage: React.FC = () => {
             >
               Continuar
             </button>
-            <button type="button" className="btn-secondary" onClick={handleLoginGov}>
+            <button type="button" className="btn-secondary">
               Continuar com a conta <img src={govbr} alt="logo gov" className="image-gov" />
             </button>
           </form>
@@ -96,7 +103,11 @@ const LoginPage: React.FC = () => {
       <div className="info-box">
         <strong>Atenção!</strong>
         <br />
-        A <strong>posição na fila</strong> e a <strong>previsão</strong> de atendimento são estimativas e poderão mudar de acordo com a gravidade do paciente (Sabe como funciona a FILA?) ou por decisão judicial
+        A <strong>posição na fila</strong> e a <strong>previsão</strong> de atendimento são estimativas e poderão mudar de acordo com a gravidade do paciente (
+        <a href="/help" className="queue-link">
+          Sabe como funciona a FILA? ℹ️
+        </a>
+        ) ou por decisão judicial
       </div>
     </div>
   );

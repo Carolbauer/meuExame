@@ -30,7 +30,7 @@ interface CardProps {
   address?: string;
   isScheduled: boolean;
   instructions?: string;
-  appointmentId: string;
+  appointmentId?: string;
 }
 
 function Card({

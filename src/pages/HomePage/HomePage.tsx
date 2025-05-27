@@ -12,8 +12,7 @@ function HomePage() {
 
   useEffect(() => {
     async function fetchUserAndExams() {
-      const { data: sessionData } = await supabase.auth.getUser();
-      const email = sessionData.user.email;
+      const email =  localStorage.getItem('userData');
 
       const { data: userData } = await supabase
         .from("users")
@@ -23,7 +22,7 @@ function HomePage() {
 
       setUser(userData);
 
-      const { data: queueData } = await supabase
+      const { data: queueData, error } = await supabase
         .from("schedulingqueue")
         .select(
           `
@@ -36,14 +35,14 @@ function HomePage() {
         )
         .eq("user_id", userData.id);
 
+      if(error) throw new Error("Erro ao processar informações.");
+
       const enrichedExams = await Promise.all(
         queueData.map(async (item) => {
-          const daysInQueue = Math.floor(
-            (Date.now() - new Date(item.created_at).getTime()) /
-            (1000 * 60 * 60 * 24)
-          );
+          const diff = Date.now() - new Date(item.created_at).getTime();
+          const daysInQueue = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
 
-          const { data: allInQueue } = await supabase
+          const { data: allInQueue, error } = await supabase
             .from("schedulingqueue")
             .select(
               `
@@ -53,6 +52,8 @@ function HomePage() {
             `
             )
             .eq("exam_id", item.exam_id);
+
+            if(error) throw new Error("Erro ao processar informações.");
 
           allInQueue.sort((a, b) => {
             const prioA = a.prioritylevels?.id ?? 99;

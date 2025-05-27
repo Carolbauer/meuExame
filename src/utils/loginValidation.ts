@@ -1,4 +1,4 @@
-export function validateLogin({ cpf, code }) {
+export function validateLogin(cpf: string, code: string ) {
     const errors = { cpf: "", code: "", auth: "" };
     let valid = true;
   
