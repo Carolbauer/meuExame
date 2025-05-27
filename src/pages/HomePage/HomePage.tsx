@@ -68,7 +68,7 @@ function HomePage() {
 
           const { data: appointment } = await supabase
             .from("appointments")
-            .select("appointment_time")
+            .select("id,appointment_time")
             .eq("scheduling_queue_id", item.id)
             .single();
 
@@ -83,7 +83,8 @@ function HomePage() {
             timeInQueue: `${daysInQueue} dias`,
             position,
             isScheduled,
-            status: isScheduled ? "Aguardando confirmação" : "Na fila de espera"
+            status: isScheduled ? "Aguardando confirmação" : "Na fila de espera",
+            appointmentId:appointment?.id
           };
 
         })
@@ -124,28 +125,17 @@ function HomePage() {
             key={idx}
             examId={exam.exam_id}
             examName={exam.name}
-            status={"Na fila de espera"}
+            status={exam.status}
             priority={exam.priority}
             avgWaitTime={exam.avgWaitTime}
             timeInQueue={exam.timeInQueue}
             position={`${exam.position}º`}
             isScheduled={exam.isScheduled}
+            appointmentId={exam.appointmentId}
           />
         ))
       )}
-      {exams.map((exam, idx) => (
-        <Card
-          key={idx}
-          examId={exam.exam_id}
-          examName={exam.name}
-          status={exam.status}
-          priority={exam.priority}
-          avgWaitTime={exam.avgWaitTime}
-          timeInQueue={exam.timeInQueue}
-          position={`${exam.position}º`}
-          isScheduled={exam.isScheduled}
-        />
-      ))}
+      
 
       <div className="alerts">
         <div className="alert">

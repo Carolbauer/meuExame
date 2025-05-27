@@ -30,6 +30,7 @@ interface CardProps {
   address?: string;
   isScheduled: boolean;
   instructions?: string;
+  appointmentId: string;
 }
 
 function Card({
@@ -45,12 +46,13 @@ function Card({
   location,
   address,
   isScheduled,
-  instructions
+  instructions,
+  appointmentId
 }: CardProps) {
   const navigate = useNavigate();
 
   function handleClick() {
-    navigate(`/exame/${examId}`);
+    navigate(`/exame/${appointmentId}`);
   }
 
   return (

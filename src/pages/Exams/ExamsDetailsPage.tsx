@@ -12,33 +12,44 @@ function ExamsDetailsPage() {
 
   useEffect(() => {
     async function fetchData() {
-      const { data } = await supabase
-        .from("appointments")
-        .select(`
+      const { data, error } = await supabase
+      .from('appointments')
+      .select(`
+        id,
+        appointment_time,
+        facility: facilities (
           id,
-          appointment_time,
-          facility:facilities (
-            name,
-            address
-          ),
-          schedulingqueue (
+          name,
+          address,
+          cnpj,
+          phone
+        ),
+        schedulingqueue (
+          id,
+          created_at,
+          prioritylevel: prioritylevels (
             id,
-            created_at,
-            exam:exams (
-              id,
-              name
-            ),
-            user:users (
-              name,
-              cpf
-            ),
-            priority_level:prioritylevels (
-              description
-            )
+            description,
+            color
+          ),
+          exam: exams (
+            id,
+            name,
+            exam_type_id
+          ),
+          user: users (
+            id,
+            name,
+            cpf,
+            address,
+            phone,
+            code,
+            email
           )
-        `)
-        .eq("scheduling_queue_id", id)
-        .single();
+        )
+      `)
+      .eq('id', id) 
+      .single();
 
       setAppointment(data);
       setLoading(false);
