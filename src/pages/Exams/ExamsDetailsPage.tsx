@@ -58,7 +58,7 @@ function ExamsDetailsPage() {
     fetchData();
   }, [id]);
 
-  if (!appointment) return null;
+  if (!appointment) throw new Error("Appointment not found");;
 
   const { schedulingqueue, appointment_time, facility } = appointment;
   const user = schedulingqueue.user;
