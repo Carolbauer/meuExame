@@ -58,12 +58,16 @@ function ExamsDetailsPage() {
     fetchData();
   }, [id]);
 
+if (loading) {
+  return <p className="text-page">Carregando...</p>;
+}
+
   if (!appointment) throw new Error("Appointment not found");;
 
   const { schedulingqueue, appointment_time, facility } = appointment;
   const user = schedulingqueue.user;
   const exam = schedulingqueue.exam;
-  const priority = schedulingqueue.priority_level?.description ?? "Não definida";
+  const priority = schedulingqueue.prioritylevel?.description ?? "Não definida";
 
   const dateObj = new Date(appointment_time);
   const date = dateObj.toLocaleDateString("pt-BR");
