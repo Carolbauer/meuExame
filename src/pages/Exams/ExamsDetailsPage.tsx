@@ -4,11 +4,18 @@ import { supabase } from "../../utils/supabaseClient";
 import Card from "../../components/Card/Card";
 import { FaExclamationTriangle } from "react-icons/fa";
 import "../HomePage/HomePage.css";
+import ModalConfirmationAttendance from "../../components/Modal/ModalConfirmationAttendance";
+import ModalSuccess from "../../components/Modal/ModalSuccess";
+import ModalDecline from "../../components/Modal/ModalDecline";
 
 function ExamsDetailsPage() {
   const { id } = useParams();
   const [appointment, setAppointment] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showDeclineModal, setShowDeclineModal] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -58,6 +65,20 @@ function ExamsDetailsPage() {
     fetchData();
   }, [id]);
 
+  const handleConfirmPresence = async () => {
+    setShowConfirmationModal(false);
+    setShowSuccessModal(true);
+  }
+
+  const handleDeclinePresence = async () => {
+    setShowConfirmationModal(false);
+    setShowDeclineModal(true);
+  }
+
+  const handleSaveAppointment = () => {
+    setShowSuccessModal(false);
+  }
+
 if (loading) {
   return <p className="text-page">Carregando...</p>;
 }
@@ -100,7 +121,30 @@ return (
       address={facility.address}
       isScheduled={false}
       instructions="Comparecer com 15 minutos de antecedência e levar documento com foto"
+      showConfirmationButton={true}
+      setShowModal={setShowConfirmationModal}
     />
+
+    {showConfirmationModal && (
+      <ModalConfirmationAttendance
+      onClose={() => setShowConfirmationModal(false)}
+      onConfirm={handleConfirmPresence}
+      onDecline={handleDeclinePresence}
+      />
+    )}
+
+    {showSuccessModal && (
+      <ModalSuccess
+        onClose={() => setShowSuccessModal(false)}
+        onSave={handleSaveAppointment}
+      />
+    )}
+
+    {showDeclineModal && (
+      <ModalDecline
+        onClose={() => setShowDeclineModal(false)}
+      />
+    )}
 
       <div className="alerts">
         <div className="alert">

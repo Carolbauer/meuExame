@@ -31,6 +31,8 @@ interface CardProps {
   isScheduled: boolean;
   instructions?: string;
   appointmentId?: string;
+  showConfirmationButton?: boolean;
+  setShowModal?: (show: boolean) => void;
 }
 
 function Card({
@@ -47,7 +49,9 @@ function Card({
   address,
   isScheduled,
   instructions,
-  appointmentId
+  appointmentId,
+  showConfirmationButton,
+  setShowModal
 }: CardProps) {
   const navigate = useNavigate();
 
@@ -124,6 +128,14 @@ function Card({
           <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}>
             <button className="btn-consult" onClick={handleClick}>
               Consultar Informações
+            </button>
+          </div>
+        )}
+
+        {showConfirmationButton && status === "AGUARDANDO CONFIRMAÇÃO" && setShowModal && (
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}>
+            <button className="btn-confirm" onClick={() => setShowModal(true)}>
+              Confirmar Presença
             </button>
           </div>
         )}
