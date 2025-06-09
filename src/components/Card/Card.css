@@ -109,3 +109,22 @@
 .btn-consult:hover {
   background-color: #218838;
 }
+
+.btn-confirm {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  display: block;
+  margin: 16px auto 0 auto;
+}
+
+.btn-confirm:hover {
+  background-color: #218838;
+}
