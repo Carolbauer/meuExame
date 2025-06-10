@@ -104,7 +104,7 @@ const LoginPage: React.FC = () => {
         <strong>Atenção!</strong>
         <br />
         A <strong>posição na fila</strong> e a <strong>previsão</strong> de atendimento são estimativas e poderão mudar de acordo com a gravidade do paciente (
-        <a href="/help" className="queue-link">
+        <a href="/priorityInfo" className="queue-link">
           Sabe como funciona a FILA? ℹ️
         </a>
         ) ou por decisão judicial

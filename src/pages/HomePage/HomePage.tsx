@@ -4,6 +4,7 @@ import { supabase } from "../../utils/supabaseClient";
 import Card from "../../components/Card/Card";
 import "./HomePage.css";
 import { FaExclamationTriangle } from "react-icons/fa";
+import AlertMessage from "../../components/Card/Alerts/AlertMessage";
 
 function HomePage() {
   const navigation = useNavigate();
@@ -12,7 +13,7 @@ function HomePage() {
 
   useEffect(() => {
     async function fetchUserAndExams() {
-      const email =  localStorage.getItem('userData');
+      const email = localStorage.getItem('userData');
 
       const { data: userData } = await supabase
         .from("users")
@@ -35,7 +36,7 @@ function HomePage() {
         )
         .eq("user_id", userData.id);
 
-      if(error) throw new Error("Erro ao processar informações.");
+      if (error) throw new Error("Erro ao processar informações.");
 
       const enrichedExams = await Promise.all(
         queueData.map(async (item) => {
@@ -53,7 +54,7 @@ function HomePage() {
             )
             .eq("exam_id", item.exam_id);
 
-            if(error) throw new Error("Erro ao processar informações.");
+          if (error) throw new Error("Erro ao processar informações.");
 
           allInQueue.sort((a, b) => {
             const prioA = a.prioritylevels?.id ?? 99;
@@ -85,7 +86,7 @@ function HomePage() {
             position,
             isScheduled,
             status: isScheduled ? "Aguardando confirmação" : "Na fila de espera",
-            appointmentId:appointment?.id
+            appointmentId: appointment?.id
           };
 
         })
@@ -136,38 +137,18 @@ function HomePage() {
           />
         ))
       )}
-      
 
-      <div className="alerts">
-        <div className="alert">
-          <div className="alert-content">
-            <FaExclamationTriangle className="alert-icon" />
-            <span>
-              Em caso de dúvidas entre em contato com sua unidade de saúde
-            </span>
-          </div>
-        </div>
-        <div className="alert">
-          <div className="alert-content">
-            <FaExclamationTriangle className="alert-icon" />
-            <span>
-              A posição na fila e a previsão de atendimento são estimativas e
-              poderão mudar de acordo com a gravidade do paciente(
-              <NavLink
-                to={"/comofuncionaafila"}
-                style={{
-                  color: "#007bff",
-                  textDecoration: "underline",
-                  fontWeight: "bold",
-                }}
-              >
-                Sabe como funciona a FILA?
-              </NavLink>
-              ) ou por decisão judicial
-            </span>
-          </div>
-        </div>
-      </div>
+
+      <AlertMessage message="Em caso de dúvidas entre em contato com sua unidade de saúde" />
+
+      <AlertMessage
+        message={
+          <>
+            <strong>A posição na fila e a previsão</strong> de atendimento são estimativas e poderão mudar de acordo com a gravidade do paciente (Metodologia Prioridades) ou por decisão judicial
+          </>
+        }
+      />
+
     </div>
   );
 }
