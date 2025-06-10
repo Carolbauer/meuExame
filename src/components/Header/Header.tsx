@@ -30,7 +30,7 @@ function Header() {
 
           <li>
             <NavLink
-              to={"/comofuncionaafila"}
+              to={"/priorityInfo"}
               className={({ isActive }) => (isActive ? "selected" : "")}
             >
               Sabe como funciona a FILA?
