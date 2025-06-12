@@ -7,6 +7,8 @@ import "../HomePage/HomePage.css";
 import ModalConfirmationAttendance from "../../components/Modal/ModalConfirmationAttendance";
 import ModalSuccess from "../../components/Modal/ModalSuccess";
 import ModalDecline from "../../components/Modal/ModalDecline";
+import AlertMessage from "../../components/Card/Alerts/AlertMessage";
+
 
 function ExamsDetailsPage() {
   const { id } = useParams();
@@ -146,26 +148,15 @@ return (
       />
     )}
 
-      <div className="alerts">
-        <div className="alert">
-          <div className="alert-content">
-            <FaExclamationTriangle className="alert-icon" />
-            <span>
-              Em caso de dúvidas entre em contato com sua unidade de saúde
-            </span>
-          </div>
-        </div>
-        <div className="alert">
-          <div className="alert-content">
-            <FaExclamationTriangle className="alert-icon" />
-            <span>
-              A posição na fila e a previsão de atendimento são estimativas e
-              poderão mudar de acordo com a gravidade do paciente(Metodologia
-              Prioridades) ou por decisão judicial
-            </span>
-          </div>
-        </div>
-      </div>
+      <AlertMessage message="Em caso de dúvidas entre em contato com sua unidade de saúde" />
+
+      <AlertMessage
+        message={
+          <>
+            <strong>A posição na fila e a previsão</strong> de atendimento são estimativas e poderão mudar de acordo com a gravidade do paciente (Metodologia Prioridades) ou por decisão judicial
+          </>
+        }
+      />
     </div>
   );
 }
