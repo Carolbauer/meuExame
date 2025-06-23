@@ -6,6 +6,7 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import Exams from "./pages/Exams/ExamsDetailsPage";
 import PriorityInfoPage from "./pages/PriorityInfoPage/PriorityInfoPage";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
+import WaintingListPage from "./pages/WaitingList/WaitingListPage";
 
 function App() {
   return (
@@ -17,8 +18,9 @@ function App() {
         <Route path="/home" element={<HomePage />} />
         <Route path="/priorityInfo" element={<PriorityInfoPage />} />
         <Route path="/exame/:id" element={<Exams />} />
-
         <Route path="*" element={<NotFoundPage/>} />
+        <Route path="/filadeespera" element={<WaintingListPage />} />
+        <Route path="*" element={<h1>404</h1>} />
       </Routes>
     </BrowserRouter>
   );
