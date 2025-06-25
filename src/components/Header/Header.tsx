@@ -39,10 +39,10 @@ function Header() {
 
           <li>
             <NavLink
-              to={"/produtos"}
+              to={"/filadeespera"}
               className={({ isActive }) => (isActive ? "selected" : "")}
             >
-              Histórico de pesquisa
+              Fila de Espera
             </NavLink>
           </li>
 
