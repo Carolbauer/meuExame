@@ -1,12 +1,9 @@
 import React from "react";
-import { FaCheckCircle, FaCheckSquare, FaExclamationTriangle, FaFileDownload } from "react-icons/fa";
+import { FaCheckCircle, FaFileDownload } from "react-icons/fa";
 import Modal from "./Modal";
 import "./Modal.css"
 import { generateExamesPDF } from "../../utils/generateFileinPDF";
-import { supabase } from "../../utils/supabaseClient";
 import { useParams } from "react-router-dom";
-import { AppointmentConfirmation } from "../../backend/dtos/AppointmentConfirmationDto";
-import { SupabaseController } from "../../backend/controllers/SupabaseController";
 
 interface ModalSuccessProps {
     onClose: () => void;
@@ -15,10 +12,6 @@ interface ModalSuccessProps {
 
 function ModalSuccess({ onClose, onSave }: ModalSuccessProps) {
     const { id } = useParams();
-    
-    
-   
-
     const handleExport = async () => {
         const response = await fetch(`http://localhost:3001/api/informationByExam/${id}`);
         const {examInformation} = await response.json();
