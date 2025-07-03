@@ -1,8 +1,10 @@
 import express from 'express';
-import { userController } from './controllers/userController';
+import { UserController } from './controllers/UserController';
+import { SupabaseController } from './controllers/SupabaseController';
 
 const router = express.Router();
 
-router.post('/login', userController.login);
+router.post('/login', new UserController().login);
+router.get('/informationByExam/:appointmentId', new SupabaseController().getInformationByExamAndSchedulingQueue);
 
 export default router;
