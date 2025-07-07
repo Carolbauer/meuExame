@@ -1,121 +1,58 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { supabase } from "../../utils/supabaseClient";
+import { NavLink } from "react-router-dom";
+import { getUserByEmail, getExamsForUser } from "../../backend/services/ExamService";
 import Card from "../../components/Card/Card";
-import "./HomePage.css";
-import { FaExclamationTriangle } from "react-icons/fa";
 import AlertMessage from "../../components/Card/Alerts/AlertMessage";
+import "./HomePage.css";
 
 function HomePage() {
-  const navigation = useNavigate();
   const [user, setUser] = useState<any>(null);
   const [exams, setExams] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const hideFieldsStatus = ["Desmarcado", "Concluído"];
 
   useEffect(() => {
-    async function fetchUserAndExams() {
-      const email = localStorage.getItem('userData');
+    async function loadData() {
+      try {
+        const email = localStorage.getItem("userData");
+        if (!email) throw new Error("Email não encontrado no localStorage");
 
-      const { data: userData } = await supabase
-        .from("users")
-        .select("*")
-        .eq("email", email)
-        .single();
+        const userData = await getUserByEmail(email);
+        const examData = await getExamsForUser(userData.id);
 
-      setUser(userData);
-
-      const { data: queueData, error } = await supabase
-        .from("schedulingqueue")
-        .select(
-          `
-          id,
-          created_at,
-          exam_id,
-          exams(name),
-          prioritylevels(id, description, color)
-        `
-        )
-        .eq("user_id", userData.id);
-
-      if (error) throw new Error("Erro ao processar informações.");
-
-      const enrichedExams = await Promise.all(
-        queueData.map(async (item) => {
-          const diff = Date.now() - new Date(item.created_at).getTime();
-          const daysInQueue = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
-
-          const { data: allInQueue, error } = await supabase
-            .from("schedulingqueue")
-            .select(
-              `
-              id,
-              created_at,
-              prioritylevels(id)
-            `
-            )
-            .eq("exam_id", item.exam_id);
-
-          if (error) throw new Error("Erro ao processar informações.");
-
-          allInQueue.sort((a, b) => {
-            const prioA = a.prioritylevels?.id ?? 99;
-            const prioB = b.prioritylevels?.id ?? 99;
-            if (prioA !== prioB) return prioA - prioB;
-            return (
-              new Date(a.created_at).getTime() -
-              new Date(b.created_at).getTime()
-            );
-          });
-
-          const position = allInQueue.findIndex((q) => q.id === item.id) + 1;
-
-          const { data: appointment } = await supabase
-            .from("appointments")
-            .select("id,appointment_time")
-            .eq("scheduling_queue_id", item.id)
-            .single();
-
-          const isScheduled = Boolean(appointment?.appointment_time);
-
-          return {
-            exam_id: item.exam_id,
-            name: item.exams.name,
-            priority: item.prioritylevels.description,
-            color: item.prioritylevels.color,
-            avgWaitTime: "60 dias",
-            timeInQueue: `${daysInQueue} dias`,
-            position,
-            isScheduled,
-            status: isScheduled ? "Aguardando confirmação" : "Na fila de espera",
-            appointmentId: appointment?.id
-          };
-
-        })
-      );
-
-      setExams(enrichedExams);
+        setUser(userData);
+        setExams(examData);
+      } catch (err) {
+        console.error(err);
+        alert("Erro ao carregar dados do usuário.");
+      } finally {
+        setLoading(false);
+      }
     }
 
-    fetchUserAndExams();
-  }, [navigation]);
+    loadData();
+  }, []);
 
   return (
     <div className="container-page">
       <h2 className="title">Bem-vindo à plataforma Meu Exame!</h2>
 
-      {user ? (
+      {loading ? (
+        <p className="text-page">Carregando...</p>
+      ) : user ? (
         <p className="text-page">
           Olá <strong>{user.name || user.email}</strong>, seu número de CPF é{" "}
           <strong>{user.cpf}</strong>
         </p>
       ) : (
-        <p className="text-page">Carregando informações do paciente...</p>
+        <p className="text-page">Usuário não encontrado.</p>
       )}
 
       {exams.length === 0 ? (
         <div className="no-exams">
           <p className="no-exams-text">
-            Tudo certo por aqui! Nenhum exame foi solicitado para você até
-            agora. Assim que um exame for agendado, ele aparecerá nesta tela.
+            Tudo certo por aqui! Nenhum exame foi solicitado para você até agora. Assim que um exame for agendado, ele aparecerá nesta tela.
           </p>
           <NavLink to="/produtos" className="no-exams-btn">
             Solicitar Exame
@@ -128,27 +65,29 @@ function HomePage() {
             examId={exam.exam_id}
             examName={exam.name}
             status={exam.status}
-            priority={exam.priority}
-            avgWaitTime={exam.avgWaitTime}
-            timeInQueue={exam.timeInQueue}
-            position={`${exam.position}º`}
+            priority={hideFieldsStatus.includes(exam.status) ? null : exam.priority}
+            avgWaitTime={hideFieldsStatus.includes(exam.status) ? null : exam.avgWaitTime}
+            timeInQueue={hideFieldsStatus.includes(exam.status) ? null : exam.timeInQueue}
+            position={
+              hideFieldsStatus.includes(exam.status) || exam.position === 0
+                ? null
+                : `${exam.position}º`
+            }
             isScheduled={exam.isScheduled}
             appointmentId={exam.appointmentId}
           />
         ))
       )}
 
-
       <AlertMessage message="Em caso de dúvidas entre em contato com sua unidade de saúde" />
 
       <AlertMessage
         message={
           <>
-            <strong>A posição na fila e a previsão</strong> de atendimento são estimativas e poderão mudar de acordo com a gravidade do paciente (Metodologia Prioridades) ou por decisão judicial
+            <strong>A posição na fila e a previsão</strong> de atendimento são estimativas e poderão mudar de acordo com a gravidade do paciente ou por decisão judicial.
           </>
         }
       />
-
     </div>
   );
 }

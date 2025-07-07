@@ -16,6 +16,16 @@ function getPriorityClass(priority: string) {
   }
 }
 
+function shouldShowConsultButton(status: string, isScheduled: boolean) {
+  const hiddenStatuses = ["Na Fila de Espera", "Concluído", "Desmarcado"];
+  return isScheduled && !hiddenStatuses.includes(status);
+}
+
+function shouldShowConfirmationButton(status: string, show: boolean | undefined) {
+  const hiddenStatuses = ["Na Fila de Espera", "Concluído", "Desmarcado"];
+  return show && !hiddenStatuses.includes(status);
+}
+
 interface CardProps {
   examId: number;
   examName: string;
@@ -124,7 +134,7 @@ function Card({
           </div>
         )}
 
-        {isScheduled && (
+        {shouldShowConsultButton(status, isScheduled) && (
           <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}>
             <button className="btn-consult" onClick={handleClick}>
               Consultar Informações
@@ -132,7 +142,7 @@ function Card({
           </div>
         )}
 
-        {showConfirmationButton && status === "AGUARDANDO CONFIRMAÇÃO" && setShowModal && (
+        {shouldShowConfirmationButton(status, showConfirmationButton) && setShowModal && (
           <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}>
             <button className="btn-confirm" onClick={() => setShowModal(true)}>
               Confirmar Presença
