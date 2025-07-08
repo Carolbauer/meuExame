@@ -47,7 +47,8 @@ function WaitingListPage() {
           user_id,
           exams(name),
           users(id, name),
-          prioritylevels(description)
+          prioritylevels(description),
+          schedulingqueuestatus(description)
         `)
         .order("exam_id", { ascending: true })
         .order("priority_level_id", { ascending: true })
@@ -58,16 +59,40 @@ function WaitingListPage() {
         return;
       }
 
-      const formattedData = data.map((item: any) => {
-        const isCurrentUser = currentUser && item.users.id === currentUser.id;
+      const hideStatuses = ["Desmarcado", "Concluído", "Confirmado"];
 
-        return {
-          examName: item.exams.name,
-          patientName: isCurrentUser ? item.users.name : maskName(item.users.name),
-          priority: item.prioritylevels.description,
-          position: data.filter((i: any) => i.exam_id === item.exam_id).indexOf(item) + 1,
-          createdAt: formatDate(item.created_at),
-        };
+      // Filtra apenas agendamentos com status válidos
+      const validAppointments = data.filter(
+        (item: any) =>
+          !hideStatuses.includes(item.schedulingqueuestatus?.description)
+      );
+
+      // Agrupa por exame
+      const groupedByExam = validAppointments.reduce((acc: any, item: any) => {
+        const examId = item.exam_id;
+        if (!acc[examId]) acc[examId] = [];
+        acc[examId].push(item);
+        return acc;
+      }, {});
+
+      // Calcula posição dentro do grupo
+      const formattedData: any[] = [];
+
+      Object.values(groupedByExam).forEach((group: any[]) => {
+        group.forEach((item: any, index: number) => {
+          const isCurrentUser =
+            currentUser && item.users.id === currentUser.id;
+
+          formattedData.push({
+            examName: item.exams.name,
+            patientName: isCurrentUser
+              ? item.users.name
+              : maskName(item.users.name),
+            priority: item.prioritylevels.description,
+            position: index + 1,
+            createdAt: formatDate(item.created_at),
+          });
+        });
       });
 
       setAppointments(formattedData);
