@@ -1,0 +1,152 @@
+/* Estrutura geral da tela */
+.layout {
+  display: flex;
+  flex-grow: 1;
+  min-height: calc(100vh - 10vh);
+}
+
+/* Sidebar fixo à esquerda */
+.sidebar {
+  width: 220px;
+  background-color: #08356a;
+  color: white;
+  padding: 20px;
+  height: 100vh;
+  position: fixed;
+  top: 70px;
+  left: 0;
+}
+
+/* Área principal da página */
+.main-content {  
+  margin-left: 220px; /* espaço do sidebar */
+  width: calc(100% - 220px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Container da página em si */
+.container-page {
+  margin-top: 7px; /* espaço abaixo do header */
+  flex-grow: 1;               /* ocupa todo o espaço restante */
+  padding: 20px 32px;         /* margem interna confortável */
+  background-color: #ffffff;
+  max-width: 1200px;         /* largura máxima para manter o conteúdo legível */
+  width: 100%;                /* garante largura cheia */
+  box-sizing: border-box;
+}
+
+.container-nav {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+}
+
+/* Links no header */
+.container-nav a {
+  color: white;
+  text-decoration: none;
+  font-family: Arial;
+  padding-bottom: 4px;
+  position: relative;
+}
+
+.container-nav a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  left: 0;
+  bottom: 0;
+  background-color: white;
+  transition: width 0.3s;
+}
+
+.container-nav a:hover::after,
+.container-nav .selected::after {
+  width: 100%;
+}
+
+/* Estilização do título da página */
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Search */
+.search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.search-bar input {
+  padding: 8px 32px 8px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 200px;
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  top: 9px;
+  color: #888;
+}
+
+/* Tabela de pacientes */
+.table-container {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: rgb(163, 163, 163);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.table-headerP, .table-rowP {
+  display: grid;
+  grid-template-columns: 2fr 1.4fr 1.3fr 1.8fr 2.8fr 1.5fr 0.6fr;
+  gap: 8px;
+  padding: 10px 8px;
+  border-bottom: 1px solid #ccc;
+  align-items: center;
+}
+
+.table-headerP {
+  background-color: #003366;
+  color: white;
+  font-weight: bold;
+}
+
+.table-rowP {
+  background-color: #d5d5d6;
+}
+
+.table-rowP:hover {
+  background-color: #e6e6e6;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  font-size: 1rem;
+}
+
+.btn-register {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
