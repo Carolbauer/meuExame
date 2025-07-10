@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaFileAlt, FaPlus, FaSearch } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar/Sidebar";
-import "./AppointmentListPage.css";
+import "./appointmentListPage.css";
 
 function AppointmentList() {
     const [search, setSearch] = useState('');

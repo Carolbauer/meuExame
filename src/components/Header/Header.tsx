@@ -39,7 +39,7 @@ function Header() {
 
           <li>
             <NavLink
-              to={"/filadeespera"}
+              to={"/waitingLine"}
               className={({ isActive }) => (isActive ? "selected" : "")}
             >
               Fila de Espera
