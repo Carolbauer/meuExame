@@ -7,6 +7,13 @@ import Exams from "./pages/Exams/ExamsDetailsPage";
 import PriorityInfoPage from "./pages/PriorityInfoPage/PriorityInfoPage";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import WaintingListPage from "./pages/WaitingList/WaitingListPage";
+import RegisterPatient from "./pages/RegisterPatientPage/RegisterPatient";
+import RegisterPatientForms from "./pages/RegisterPatientFormsPage/RegisterPatientForms";
+import WaitingListAdmin from "./pages/PatientListPage/PatientList";
+import RegisterPatientToList from "./pages/RegisterPatientToListPage/RegisterPatientToList";
+import PatientList from "./pages/PatientListPage/PatientList";
+import RegisterExamAppointment from "./pages/RegisterExamAppointment/RegisterExamAppointmentPage";
+import AppointmentList from "./pages/AppointmentListPage/AppointmentListPage";
 
 function App() {
   return (
@@ -16,6 +23,13 @@ function App() {
         <Route index element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/home" element={<HomePage />} />
+        <Route path="/RegisterPatient" element={<RegisterPatient />} />
+        <Route path="/RegisterPatientForms" element={<RegisterPatientForms />} />
+        <Route path="/RegisterPatientToList" element={<RegisterPatientToList />} />
+        <Route path="/PatientList" element={<PatientList />} />
+        <Route path="/RegisterExamAppointment" element={<RegisterExamAppointment />} />
+        <Route path="/AppointmentList" element={<AppointmentList />} />
+        <Route path="/WaitingListAdmin" element={<WaitingListAdmin />} />
         <Route path="/priorityInfo" element={<PriorityInfoPage />} />
         <Route path="/exame/:id" element={<Exams />} />
         <Route path="*" element={<NotFoundPage/>} />
