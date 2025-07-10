@@ -36,6 +36,7 @@ const LoginPage: React.FC = () => {
       }
 
       const data = await response.json();
+      const permissions = data.userData.permissions.split(",");
 
       if (data.token) {
         localStorage.setItem("token", data.token);
@@ -44,7 +45,8 @@ const LoginPage: React.FC = () => {
         throw new Error("Token não encontrado na resposta.");
       }
 
-      navigation("/home");
+      (permissions.length > 1) ? navigation("/admin/login/") : navigation("/home");
+      
     } catch (error: any) {
       setErrors({
         ...validationErrors,

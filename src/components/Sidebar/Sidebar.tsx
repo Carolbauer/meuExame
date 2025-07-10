@@ -7,11 +7,11 @@ function Sidebar() {
     return (
         <div className="sidebar">
             <nav>
-                <NavLink to="/RegisterPatient" className="sidebar-link">
+                <NavLink to="/admin/registerPatient" className="sidebar-link">
                 <FaUserInjured className="sidebar-icon" />
                     Cadastrar Paciente
                 </NavLink>
-                <NavLink to="/RegisterPatientToList" className="sidebar-link">
+                <NavLink to="/admin/registerPatientToList" className="sidebar-link">
                     <FaUserInjured className="sidebar-icon" />
                     Cadastrar paciente na lista de espera
                 </NavLink>

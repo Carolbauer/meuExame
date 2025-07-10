@@ -21,8 +21,8 @@ function shouldShowConsultButton(status: string, isScheduled: boolean) {
   return isScheduled && !hiddenStatuses.includes(status);
 }
 
-function shouldShowConfirmationButton(status: string, show: boolean | undefined) {
-  const hiddenStatuses = ["Na Fila de Espera", "Concluído", "Desmarcado"];
+function shouldShowConfirmationButton(status: string, show: boolean ) {
+  const hiddenStatuses = ["Na Fila de Espera", "Concluído", "Confirmado", "Desmarcado"];
   return show && !hiddenStatuses.includes(status);
 }
 
@@ -41,7 +41,7 @@ interface CardProps {
   isScheduled: boolean;
   instructions?: string;
   appointmentId?: string;
-  showConfirmationButton?: boolean;
+  showConfirmationButton: boolean;
   setShowModal?: (show: boolean) => void;
 }
 

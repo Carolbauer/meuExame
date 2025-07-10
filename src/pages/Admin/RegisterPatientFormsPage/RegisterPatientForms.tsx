@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Sidebar from "../../components/Sidebar/Sidebar";
-import "./RegisterPatientForm.css";
+import Sidebar from "../../../components/Sidebar/Sidebar";
+import "./registerPatientForm.css";
 
 function RegisterPatientForms() {
     const [formdata, setFormData] = useState({

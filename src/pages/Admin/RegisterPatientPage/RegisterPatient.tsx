@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaFileAlt, FaPlus, FaSearch, FaUserPlus } from "react-icons/fa";
-import Sidebar from "../../components/Sidebar/Sidebar";
-import "./RegisterPatient.css";
+import Sidebar from "../../../components/Sidebar/Sidebar";
+import "./registerPatient.css";
 
 function RegisterPatient() {
     const [search, setSearch] = useState('');
